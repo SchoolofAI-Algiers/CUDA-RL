@@ -2,6 +2,10 @@ from __future__ import annotations
 from datasets import Dataset, concatenate_datasets, load_dataset
 import yaml
 from typing import Any
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # template 
 # Todo: Shall be refined to include more specific instructions
@@ -36,12 +40,12 @@ def load_cuda_dataset(
         if correct_only:
             split = split.filter(lambda x: x["Correct"] is True)
         filtered_splits.append(split)
- 
+    logger.info(f"Loaded and filtered splits: {splits} | Correct only: {correct_only} | Total samples after filtering: {sum(len(ds) for ds in filtered_splits)}")
     dataset = concatenate_datasets(filtered_splits)
  
     if num_samples is not None:
         dataset = dataset.select(range(min(num_samples, len(dataset))))
-
+    logger.info(f"Final dataset size after sampling: {len(dataset)}")
     return dataset
  
 
@@ -62,4 +66,5 @@ def format_dataset(dataset: Dataset, eos_token: str , columns: list[str]) -> Dat
         return {"text": texts}
 
     dataset = dataset.map(_format, batched=True)
+    logger.info(f"Formatted dataset with {len(dataset)} samples.")
     return dataset

@@ -3,7 +3,9 @@ import os
 from typing import Any
 
 from unsloth import FastLanguageModel
-
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def load_model_and_tokenizer(
     model_name: str,
@@ -19,6 +21,7 @@ def load_model_and_tokenizer(
         dtype=dtype,
         load_in_4bit=load_in_4bit,
     )
+    logger.info(f"Loaded model and tokenizer for {model_name} | Max seq length: {max_seq_length} | Dtype: {dtype} | Load in 4-bit: {load_in_4bit}")
     return model, tokenizer
 
 
@@ -46,5 +49,6 @@ def get_peft_model(
         use_rslora=use_rslora,
         loftq_config=loftq_config,
     )
+    logger.info("PEFT model initialized.")
     model.print_trainable_parameters()
     return model

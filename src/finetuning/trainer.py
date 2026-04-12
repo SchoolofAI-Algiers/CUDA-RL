@@ -5,7 +5,9 @@ from typing import Any
 from transformers import TrainingArguments
 from trl import SFTTrainer
 from unsloth import is_bfloat16_supported
-
+import logging 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def build_trainer(
     model: Any,
@@ -57,4 +59,5 @@ def build_trainer(
 
 def run_training(trainer: SFTTrainer) -> Any:
     stats = trainer.train()
+    logger.info("Training completed.")
     return stats

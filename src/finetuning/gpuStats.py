@@ -3,7 +3,9 @@ from __future__ import annotations
 import warnings
 
 import torch
-
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def suppress_unsloth_warnings() -> None:
     warnings.filterwarnings("ignore", message="Unable to fetch remote file")
@@ -12,14 +14,14 @@ def suppress_unsloth_warnings() -> None:
 
 def print_gpu_stats() -> dict[str, float]:
     if not torch.cuda.is_available():
-        print("No CUDA device found — skipping GPU stats.")
+        logger.info("No CUDA device found — skipping GPU stats.")
         return {}
 
     props = torch.cuda.get_device_properties(0)
     total_gb = round(props.total_memory / 1024 ** 3, 3)
     reserved_gb = round(torch.cuda.max_memory_reserved() / 1024 ** 3, 3)
 
-    print(
+    logger.info(
         f"GPU: {props.name}  |  "
         f"Total VRAM: {total_gb} GB  |  "
         f"Reserved: {reserved_gb} GB"
@@ -33,4 +35,4 @@ def print_peak_memory(start_reserved_gb: float) -> None:
 
     peak_gb = round(torch.cuda.max_memory_reserved() / 1024 ** 3, 3)
     used_gb = round(peak_gb - start_reserved_gb, 3)
-    print(f"Peak VRAM: {peak_gb} GB  |  Used for training: {used_gb} GB")
+    logger.info(f"Peak VRAM: {peak_gb} GB  |  Used for training: {used_gb} GB")

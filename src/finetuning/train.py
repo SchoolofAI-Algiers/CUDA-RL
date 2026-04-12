@@ -26,8 +26,8 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_CONFIG,
         help="Path to the YAML config file (default: config.yaml)",
     )
-    return parser.parse_args()
 
+    return parser.parse_args()
 
 def load_config(config_path: Path) -> dict:
     with open(config_path) as f:
