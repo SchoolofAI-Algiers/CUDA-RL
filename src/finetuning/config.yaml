@@ -1,0 +1,51 @@
+# model configuration 
+model_name: "unsloth/Qwen2.5-Coder-7B-Instruct"
+max_seq_length: 2048
+dtype: null         
+load_in_4bit: true  
+
+# lora adapters configuration 
+lora_r: 16
+lora_alpha: 16
+lora_dropout: 0
+lora_bias: "none"
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+use_gradient_checkpointing: "unsloth"
+use_rslora: false
+loftq_config: null
+random_state: 42
+
+#dataset configuration 
+dataset_name: "SakanaAI/AI-CUDA-Engineer-Archive"
+splits:
+  - level_1
+  - level_2
+  - level_3
+correct_only: true   
+num_samples: 20   # sampled 20 only for testing   
+format_columns: 
+  - Op_Name
+  - PyTorch_Code_Module
+  - CUDA_Code
+
+# training configuration
+output_dir: "outputs"
+num_train_epochs: 1
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+warmup_steps: 5
+learning_rate: 2.0e-4
+weight_decay: 0.01
+lr_scheduler_type: "linear"
+optim: "adamw_8bit"
+logging_steps: 10
+seed: 42
+packing: false
+dataset_num_proc: 2
