@@ -6,3 +6,4 @@ bitsandbytes
 datasets
 transformers
 pyyaml
+wandb

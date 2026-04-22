@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasetLoader import format_dataset, load_cuda_dataset
 from modelLoader import get_peft_model, load_model_and_tokenizer
-from trainer import build_trainer, run_training
+from finetuning.SFTTrainer import build_trainer, run_training
 from gpuStats import print_gpu_stats, print_peak_memory, suppress_unsloth_warnings
 
 
