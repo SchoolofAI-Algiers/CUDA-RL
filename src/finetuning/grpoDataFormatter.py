@@ -3,6 +3,7 @@ from __future__ import annotations
 from datasets import Dataset
 from typing import Any
 import logging
+from finetuning.prompt import CUDA_SYSTEM_PROMPT, build_user_prompt
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,12 +20,12 @@ def format_cuda_dataset_for_grpo(dataset: Dataset) -> Dataset:
         Formatted dataset with GRPO-specific fields.
     """
     def _format(example: dict[str, Any]) -> dict[str, Any]:
-        prompt = (
-            f"Optimize the following CUDA kernel for maximum performance while maintaining correctness.\n\n"
-            f"```cuda\n{example['CUDA_Code']}\n```\n\n"
-            f"Return ONLY the optimized CUDA code. Do not include explanations, markdown, or extra text."
-        )
+        task_name = example.get('task_name', 'CUDA_Task')
+        user_prompt = build_user_prompt(task_name, example['CUDA_Code'])
+        prompt = f"{CUDA_SYSTEM_PROMPT}\n\n{user_prompt}"
+        
         return {
+            "prompt": prompt,
             "prompt": prompt,
             "cuda_runtime": example["CUDA_Runtime"],
             "speedup_native": example["CUDA_Speedup_Native"],
